@@ -57,16 +57,20 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/master')
         with:
-          tag_name: v1.0.1
-          name: "Kelas 8A v1.0.1 (Support Android 9-16 & Split ABI)"
+          tag_name: v1.0.2
+          name: "Kelas 8A v1.0.2 (Tema Laut, Modern iOS 26/27, Mode Guru)"
           body: |
-            Aplikasi Kelas 8A Flutter iOS Cupertino (Build Rilis Resmi)
+            Aplikasi Kelas 8A Flutter Ultra-Modern iOS 26/27 (Build Rilis Resmi)
+            - Tata letak baru: Dynamic Island Capsule, modern 22px curved glassmorphic cards
+            - Tema Warna Apple Baru: 🌊 Tema Laut (Ocean Blue), 🔵 Biru Klasik, 🔴 Merah Ruby, 🌸 Sakura Pink, 💜 Lavender
+            - Fitur Beranda Baru: Jadwal Hari Ini aktif, Piket Kebersihan harian, dan Portal Login Guru / Wali Kelas
             - Support Android 9 sampai Android 16 (API 28 - API 35+)
             - Signed dengan RSA 2048 Release Key resmi (V1 + V2 + V3 Signature)
-            - Ikon bergaya otentik Apple iOS (Squircle Blue Gradient & SF Typography)
-            - Tersedia varian Split ABI untuk hemat memori dan ukuran lebih ringan:
+            - Ikon otentik Apple iOS Squircle
+            - Tersedia varian Split ABI untuk hemat memori:
               * Kelas8A-arm64-v8a.apk (Disarankan untuk 99% HP Android modern)
               * Kelas8A-armeabi-v7a.apk (Untuk HP Android 32-bit lama)
+              * Kelas8A-Universal.apk (Universal / Cocok untuk semua HP)
               * Kelas8A-Universal.apk (Universal / Cocok untuk semua HP)
           files: dist_apk/*.apk
         env:

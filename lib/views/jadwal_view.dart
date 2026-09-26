@@ -17,12 +17,13 @@ class _JadwalViewState extends State<JadwalView> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = widget.repo.accentColor;
     final list = widget.repo.jadwalMap[_selectedDay] ?? [];
     final piket = widget.repo.piketMap[_selectedDay];
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text('Jadwal Pelajaran 8A'),
+        middle: Text('📅 Jadwal Pelajaran 8A'),
       ),
       child: SafeArea(
         child: ListView(
@@ -30,12 +31,12 @@ class _JadwalViewState extends State<JadwalView> {
           children: [
             const Text(
               'WAKTU & PEMBELAJARAN',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel, letterSpacing: 0.5),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel, letterSpacing: 0.6),
             ),
             const SizedBox(height: 2),
             const Text(
               'Jadwal Kelas 8A',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.8),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -0.8),
             ),
             const SizedBox(height: 14),
 
@@ -61,9 +62,15 @@ class _JadwalViewState extends State<JadwalView> {
             ),
             const SizedBox(height: 18),
 
-            Text(
-              'MAPEL HARI ${_selectedDay.toUpperCase()}',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel),
+            Row(
+              children: [
+                const Text('📚', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 6),
+                Text(
+                  'MAPEL HARI ${_selectedDay.toUpperCase()}',
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
 
@@ -72,7 +79,7 @@ class _JadwalViewState extends State<JadwalView> {
               child: list.isEmpty
                   ? const Padding(
                       padding: EdgeInsets.all(24.0),
-                      child: Center(child: Text('Tidak ada jadwal pelajaran', style: TextStyle(color: CupertinoColors.secondaryLabel))),
+                      child: Center(child: Text('Tidak ada jadwal pelajaran hari ini 🎉', style: TextStyle(color: CupertinoColors.secondaryLabel))),
                     )
                   : Column(
                       children: list.map((item) {
@@ -84,20 +91,21 @@ class _JadwalViewState extends State<JadwalView> {
                           child: Row(
                             children: [
                               Container(
-                                width: 34,
-                                height: 34,
+                                width: 36,
+                                height: 36,
                                 decoration: BoxDecoration(
-                                  color: CupertinoColors.activeBlue.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(8),
+                                  color: accent.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Icon(CupertinoIcons.book_fill, size: 17, color: CupertinoColors.activeBlue),
+                                alignment: Alignment.center,
+                                child: Icon(CupertinoIcons.book_fill, size: 18, color: accent),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(item.mapel, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                                    Text(item.mapel, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                                     const SizedBox(height: 2),
                                     Text('${item.jam} • ${item.guru}', style: const TextStyle(fontSize: 12, color: CupertinoColors.secondaryLabel)),
                                   ],
@@ -113,25 +121,31 @@ class _JadwalViewState extends State<JadwalView> {
 
             if (piket != null) ...[
               const SizedBox(height: 10),
-              Text(
-                'REGU PIKET HARI ${_selectedDay.toUpperCase()}',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel),
+              Row(
+                children: [
+                  const Text('🧹', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 6),
+                  Text(
+                    'REGU PIKET HARI ${_selectedDay.toUpperCase()}',
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               IosCard(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Petugas Piket', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        const Text('Petugas Kebersihan', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                         CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: () => widget.repo.togglePiket(_selectedDay),
                           child: IosBadge(
-                            text: piket.selesai ? 'Sudah Piket' : 'Belum Piket',
+                            text: piket.selesai ? 'Sudah Piket ✨' : 'Belum Piket ⏳',
                             type: piket.selesai ? IosBadgeType.green : IosBadgeType.orange,
                           ),
                         ),
@@ -143,14 +157,21 @@ class _JadwalViewState extends State<JadwalView> {
                       runSpacing: 6,
                       children: piket.anggota.map((nama) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: CupertinoTheme.of(context).brightness == Brightness.dark
                                 ? const Color(0xFF2C2C2E)
                                 : const Color(0xFFF2F2F7),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(14),
                           ),
-                          child: Text(nama, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('👤', style: TextStyle(fontSize: 11)),
+                              const SizedBox(width: 4),
+                              Text(nama, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                            ],
+                          ),
                         );
                       }).toList(),
                     ),

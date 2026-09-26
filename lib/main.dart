@@ -38,21 +38,22 @@ class _Kelas8AAppState extends State<Kelas8AApp> {
   @override
   Widget build(BuildContext context) {
     final isDark = _repo.isDarkMode;
+    final accent = _repo.accentColor;
 
     return CupertinoApp(
       title: 'Kelas 8A',
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
         brightness: isDark ? Brightness.dark : Brightness.light,
-        primaryColor: CupertinoColors.activeBlue,
+        primaryColor: accent,
         scaffoldBackgroundColor: isDark
             ? CupertinoColors.black
             : const Color(0xFFF2F2F7),
         barBackgroundColor: isDark
             ? const Color(0xE61C1C1E)
             : const Color(0xF2F9F9F9),
-        textTheme: const CupertinoTextThemeData(
-          primaryColor: CupertinoColors.activeBlue,
+        textTheme: CupertinoTextThemeData(
+          primaryColor: accent,
         ),
       ),
       home: MainTabBarController(repo: _repo),
@@ -84,10 +85,12 @@ class _MainTabBarControllerState extends State<MainTabBarController> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = widget.repo.accentColor;
+
     return CupertinoTabScaffold(
       controller: _tabController,
       tabBar: CupertinoTabBar(
-        activeColor: CupertinoColors.activeBlue,
+        activeColor: accent,
         inactiveColor: CupertinoColors.systemGrey,
         items: const [
           BottomNavigationBarItem(

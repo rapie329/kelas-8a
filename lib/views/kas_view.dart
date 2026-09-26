@@ -59,6 +59,7 @@ class _KasViewState extends State<KasView> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = widget.repo.accentColor;
     final allKas = widget.repo.kasList;
     final list = _filter == 'masuk'
         ? allKas.where((k) => k.tipe == 'masuk').toList()
@@ -68,11 +69,11 @@ class _KasViewState extends State<KasView> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Buku Kas 8A'),
+        middle: const Text('💰 Buku Kas 8A'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => _bukaModalTambah('masuk'),
-          child: const Icon(CupertinoIcons.plus_circle_fill, size: 24),
+          child: Icon(CupertinoIcons.plus_circle_fill, size: 24, color: accent),
         ),
       ),
       child: SafeArea(
@@ -81,12 +82,12 @@ class _KasViewState extends State<KasView> {
           children: [
             const Text(
               'TRANSPARANSI KEUANGAN',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel, letterSpacing: 0.5),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel, letterSpacing: 0.6),
             ),
             const SizedBox(height: 2),
             const Text(
-              'Buku Kas Kelas',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.8),
+              'Buku Kas 8A 💰',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -0.8),
             ),
             const SizedBox(height: 14),
 
@@ -96,11 +97,11 @@ class _KasViewState extends State<KasView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Saldo Kas Saat Ini', style: TextStyle(fontSize: 13, color: CupertinoColors.secondaryLabel, fontWeight: FontWeight.w500)),
+                  const Text('Saldo Kas Saat Ini', style: TextStyle(fontSize: 13, color: CupertinoColors.secondaryLabel, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
                   Text(
                     _formatRupiah(widget.repo.saldoKas),
-                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: CupertinoColors.activeBlue, letterSpacing: -0.8),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: accent, letterSpacing: -0.8),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -118,7 +119,7 @@ class _KasViewState extends State<KasView> {
                                 children: [
                                   Icon(CupertinoIcons.arrow_down_left, size: 13, color: CupertinoColors.systemGreen),
                                   SizedBox(width: 4),
-                                  Text('Total Pemasukan', style: TextStyle(fontSize: 11, color: CupertinoColors.systemGreen, fontWeight: FontWeight.w600)),
+                                  Text('Pemasukan 📈', style: TextStyle(fontSize: 11, color: CupertinoColors.systemGreen, fontWeight: FontWeight.w700)),
                                 ],
                               ),
                               const SizedBox(height: 2),
@@ -137,7 +138,7 @@ class _KasViewState extends State<KasView> {
                                 children: [
                                   Icon(CupertinoIcons.arrow_up_right, size: 13, color: CupertinoColors.systemRed),
                                   SizedBox(width: 4),
-                                  Text('Total Pengeluaran', style: TextStyle(fontSize: 11, color: CupertinoColors.systemRed, fontWeight: FontWeight.w600)),
+                                  Text('Pengeluaran 📉', style: TextStyle(fontSize: 11, color: CupertinoColors.systemRed, fontWeight: FontWeight.w700)),
                                 ],
                               ),
                               const SizedBox(height: 2),
@@ -161,15 +162,15 @@ class _KasViewState extends State<KasView> {
                 Expanded(
                   child: CupertinoButton(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    color: CupertinoColors.activeBlue.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(12),
+                    color: accent.withOpacity(0.14),
+                    borderRadius: BorderRadius.circular(14),
                     onPressed: () => _bukaModalTambah('masuk'),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(CupertinoIcons.add, size: 16, color: CupertinoColors.activeBlue),
-                        SizedBox(width: 6),
-                        Text('+ Kas Masuk', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: CupertinoColors.activeBlue)),
+                        Icon(CupertinoIcons.add, size: 16, color: accent),
+                        const SizedBox(width: 6),
+                        Text('+ Kas Masuk', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: accent)),
                       ],
                     ),
                   ),
@@ -178,15 +179,15 @@ class _KasViewState extends State<KasView> {
                 Expanded(
                   child: CupertinoButton(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    color: CupertinoColors.systemRed.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(12),
+                    color: CupertinoColors.systemRed.withOpacity(0.14),
+                    borderRadius: BorderRadius.circular(14),
                     onPressed: () => _bukaModalTambah('keluar'),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(CupertinoIcons.minus, size: 16, color: CupertinoColors.systemRed),
                         SizedBox(width: 6),
-                        Text('- Pengeluaran', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: CupertinoColors.systemRed)),
+                        Text('- Pengeluaran', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: CupertinoColors.systemRed)),
                       ],
                     ),
                   ),
@@ -203,8 +204,8 @@ class _KasViewState extends State<KasView> {
                   groupValue: _filter,
                   children: const {
                     'semua': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Semua')),
-                    'masuk': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Pemasukan')),
-                    'keluar': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Pengeluaran')),
+                    'masuk': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Pemasukan 📈')),
+                    'keluar': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Pengeluaran 📉')),
                   },
                   onValueChanged: (val) {
                     if (val != null) setState(() => _filter = val);
@@ -215,8 +216,8 @@ class _KasViewState extends State<KasView> {
             const SizedBox(height: 16),
 
             const Text(
-              'RIWAYAT TRANSAKSI',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel),
+              'RIWAYAT TRANSAKSI KAS',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel),
             ),
             const SizedBox(height: 8),
 
@@ -243,12 +244,13 @@ class _KasViewState extends State<KasView> {
                           child: Row(
                             children: [
                               Container(
-                                width: 34,
-                                height: 34,
+                                width: 36,
+                                height: 36,
                                 decoration: BoxDecoration(
                                   color: (isMasuk ? CupertinoColors.systemGreen : CupertinoColors.systemRed).withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                alignment: Alignment.center,
                                 child: Icon(
                                   isMasuk ? CupertinoIcons.arrow_down_left : CupertinoIcons.arrow_up_right,
                                   size: 16,
@@ -260,7 +262,7 @@ class _KasViewState extends State<KasView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(item.keterangan, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                                    Text(item.keterangan, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
                                     const SizedBox(height: 2),
                                     Text(
                                       '${DateFormat('dd MMM yyyy').format(item.tanggal)} • ${item.kategori}',

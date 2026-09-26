@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/siswa.dart';
 import '../models/jadwal.dart';
@@ -10,11 +10,27 @@ import '../models/pengumuman.dart';
 import 'default_data.dart';
 
 class KelasRepository extends ChangeNotifier {
-  static const String _keyStorage = 'kelas_8a_flutter_data_v1';
-  static const String _keyTheme = 'kelas_8a_flutter_theme';
+  static const String _keyStorage = 'kelas_8a_flutter_data_v2';
+  static const String _keyThemeMode = 'kelas_8a_theme_mode';
+  static const String _keyThemeCode = 'kelas_8a_theme_code';
+  static const String _keyGuruStatus = 'kelas_8a_guru_status';
+  static const String _keyGuruNama = 'kelas_8a_guru_nama';
 
   bool _isDarkMode = false;
   bool get isDarkMode => _isDarkMode;
+
+  String _themeCode = 'laut'; // 'laut', 'biru', 'merah', 'pink', 'ungu'
+  String get themeCode => _themeCode;
+
+  // Guru / Wali Kelas Auth State
+  bool _isGuruLoggedIn = false;
+  bool get isGuruLoggedIn => _isGuruLoggedIn;
+
+  String _namaGuru = 'Dra. Hj. Nurjanah, M.Pd.';
+  String get namaGuru => _namaGuru;
+
+  String _mapelGuru = 'Wali Kelas & Guru BK';
+  String get mapelGuru => _mapelGuru;
 
   List<Siswa> _siswaList = [];
   Map<String, List<JadwalMapel>> _jadwalMap = {};
@@ -32,6 +48,71 @@ class KelasRepository extends ChangeNotifier {
   List<PengurusStruktur> get strukturList => _strukturList;
   List<Pengumuman> get pengumumanList => _pengumumanList;
 
+  // Dynamic Apple iOS 26/27 Accent Colors
+  Color get accentColor {
+    switch (_themeCode) {
+      case 'laut':
+        return const Color(0xFF0096C7); // Deep Ocean Blue
+      case 'biru':
+        return const Color(0xFF007AFF); // Apple System Blue
+      case 'merah':
+        return const Color(0xFFFF2D55); // Crimson Ruby
+      case 'pink':
+        return const Color(0xFFFF2D92); // Sakura Pink
+      case 'ungu':
+        return const Color(0xFF5856D6); // Royal Purple
+      default:
+        return const Color(0xFF0096C7);
+    }
+  }
+
+  Color get secondaryAccentColor {
+    switch (_themeCode) {
+      case 'laut':
+        return const Color(0xFF00B4D8);
+      case 'biru':
+        return const Color(0xFF5AC8FA);
+      case 'merah':
+        return const Color(0xFFFF375F);
+      case 'pink':
+        return const Color(0xFFFF75B6);
+      case 'ungu':
+        return const Color(0xFFAF52DE);
+      default:
+        return const Color(0xFF00B4D8);
+    }
+  }
+
+  LinearGradient get themeGradient {
+    return LinearGradient(
+      colors: [accentColor, secondaryAccentColor],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
+  String get themeEmoji {
+    switch (_themeCode) {
+      case 'laut': return '🌊';
+      case 'biru': return '🔵';
+      case 'merah': return '🔴';
+      case 'pink': return '🌸';
+      case 'ungu': return '💜';
+      default: return '🌊';
+    }
+  }
+
+  String get themeName {
+    switch (_themeCode) {
+      case 'laut': return 'Ocean Blue';
+      case 'biru': return 'Classic Blue';
+      case 'merah': return 'Ruby Crimson';
+      case 'pink': return 'Sakura Pink';
+      case 'ungu': return 'Royal Purple';
+      default: return 'Ocean Blue';
+    }
+  }
+
   KelasRepository() {
     _initData();
   }
@@ -40,7 +121,11 @@ class KelasRepository extends ChangeNotifier {
     _loadDefault();
     try {
       final prefs = await SharedPreferences.getInstance();
-      _isDarkMode = prefs.getBool(_keyTheme) ?? false;
+      _isDarkMode = prefs.getBool(_keyThemeMode) ?? false;
+      _themeCode = prefs.getString(_keyThemeCode) ?? 'laut';
+      _isGuruLoggedIn = prefs.getBool(_keyGuruStatus) ?? false;
+      _namaGuru = prefs.getString(_keyGuruNama) ?? 'Dra. Hj. Nurjanah, M.Pd.';
+
       final raw = prefs.getString(_keyStorage);
       if (raw != null) {
         _parseJson(raw);
@@ -65,15 +150,41 @@ class KelasRepository extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_keyStorage, exportJson());
-      await prefs.setBool(_keyTheme, _isDarkMode);
+      await prefs.setBool(_keyThemeMode, _isDarkMode);
+      await prefs.setString(_keyThemeCode, _themeCode);
+      await prefs.setBool(_keyGuruStatus, _isGuruLoggedIn);
+      await prefs.setString(_keyGuruNama, _namaGuru);
     } catch (e) {
       debugPrint('Error saving preferences: $e');
     }
     notifyListeners();
   }
 
-  void toggleTheme(bool value) {
-    _isDarkMode = value;
+  void toggleTheme(bool isDark) {
+    _isDarkMode = isDark;
+    save();
+  }
+
+  void setThemeCode(String code) {
+    _themeCode = code;
+    save();
+  }
+
+  // Guru Authentication Flow
+  bool loginGuru(String nama, String mapel, String pin) {
+    // PIN default guru: 1234 atau 8888 (atau apa saja jika diisi)
+    if (pin.trim() == '1234' || pin.trim() == '8888' || pin.trim().isNotEmpty) {
+      _isGuruLoggedIn = true;
+      _namaGuru = nama.trim().isNotEmpty ? nama.trim() : 'Dra. Hj. Nurjanah, M.Pd.';
+      _mapelGuru = mapel.trim().isNotEmpty ? mapel.trim() : 'Wali Kelas 8A';
+      save();
+      return true;
+    }
+    return false;
+  }
+
+  void logoutGuru() {
+    _isGuruLoggedIn = false;
     save();
   }
 
@@ -154,6 +265,12 @@ class KelasRepository extends ChangeNotifier {
     }
   }
 
+  // Pengumuman
+  void addPengumuman(Pengumuman p) {
+    _pengumumanList.insert(0, p);
+    save();
+  }
+
   // Export / Import
   String exportJson() {
     final map = {
@@ -161,6 +278,7 @@ class KelasRepository extends ChangeNotifier {
       'tugas': _tugasList.map((t) => t.toJson()).toList(),
       'kas': _kasList.map((k) => k.toJson()).toList(),
       'piket': _piketMap.map((k, v) => MapEntry(k, v.toJson())),
+      'pengumuman': _pengumumanList.map((p) => p.toJson()).toList(),
     };
     return jsonEncode(map);
   }
@@ -191,10 +309,15 @@ class KelasRepository extends ChangeNotifier {
       final piketRaw = decoded['piket'] as Map<String, dynamic>;
       _piketMap = piketRaw.map((k, v) => MapEntry(k, PiketHarian.fromJson(v as Map<String, dynamic>)));
     }
+    if (decoded.containsKey('pengumuman')) {
+      _pengumumanList = (decoded['pengumuman'] as List).map((p) => Pengumuman.fromJson(p as Map<String, dynamic>)).toList();
+    }
   }
 
   void resetToDefault() {
     _loadDefault();
+    _isGuruLoggedIn = false;
+    _themeCode = 'laut';
     save();
   }
 }

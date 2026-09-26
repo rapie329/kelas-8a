@@ -54,6 +54,7 @@ class _TugasViewState extends State<TugasView> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = widget.repo.accentColor;
     final allTugas = widget.repo.tugasList;
     final list = _filter == 'belum'
         ? allTugas.where((t) => !t.selesai).toList()
@@ -63,11 +64,11 @@ class _TugasViewState extends State<TugasView> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Agenda Tugas & PR'),
+        middle: const Text('📝 Agenda Tugas & PR'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: _bukaModalTambah,
-          child: const Icon(CupertinoIcons.plus_circle_fill, size: 24),
+          child: Icon(CupertinoIcons.plus_circle_fill, size: 24, color: accent),
         ),
       ),
       child: SafeArea(
@@ -82,26 +83,26 @@ class _TugasViewState extends State<TugasView> {
                   children: [
                     Text(
                       'AGENDA AKADEMIK',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.secondaryLabel, letterSpacing: 0.5),
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.secondaryLabel, letterSpacing: 0.6),
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Tugas & PR',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.8),
+                      'Tugas & PR 📝',
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -0.8),
                     ),
                   ],
                 ),
                 CupertinoButton(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  color: CupertinoColors.activeBlue.withOpacity(0.12),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  color: accent,
                   borderRadius: BorderRadius.circular(16),
                   onPressed: _bukaModalTambah,
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(CupertinoIcons.add, size: 14, color: CupertinoColors.activeBlue),
+                      Icon(CupertinoIcons.add, size: 14, color: CupertinoColors.white),
                       SizedBox(width: 4),
-                      Text('Tugas Baru', style: TextStyle(fontSize: 12, color: CupertinoColors.activeBlue, fontWeight: FontWeight.w600)),
+                      Text('Tugas Baru', style: TextStyle(fontSize: 12, color: CupertinoColors.white, fontWeight: FontWeight.w700)),
                     ],
                   ),
                 ),
@@ -117,8 +118,8 @@ class _TugasViewState extends State<TugasView> {
                   groupValue: _filter,
                   children: const {
                     'semua': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Semua')),
-                    'belum': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Belum Selesai')),
-                    'selesai': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Selesai')),
+                    'belum': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Belum Selesai ⏳')),
+                    'selesai': Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Selesai ✨')),
                   },
                   onValueChanged: (val) {
                     if (val != null) setState(() => _filter = val);
@@ -135,7 +136,7 @@ class _TugasViewState extends State<TugasView> {
                       padding: EdgeInsets.all(32.0),
                       child: Center(
                         child: Text(
-                          'Tidak ada catatan tugas pada filter ini.',
+                          'Tidak ada catatan tugas pada filter ini. 🎉',
                           style: TextStyle(color: CupertinoColors.secondaryLabel),
                         ),
                       ),
@@ -168,7 +169,7 @@ class _TugasViewState extends State<TugasView> {
                                     Text(
                                       item.judul,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w700,
                                         fontSize: 15,
                                         decoration: isDone ? TextDecoration.lineThrough : null,
                                         color: isDone ? CupertinoColors.secondaryLabel : CupertinoColors.label,
