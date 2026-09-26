@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="ios-blue-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0080FF" />
+      <stop offset="100%" stop-color="#0060D6" />
+    </linearGradient>
+  </defs>
+  <!-- iOS App Icon Squircle Background -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#ios-blue-grad)" />
+  <!-- Crisp SF-styled Typography 8A -->
+  <text x="256" y="320" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="210" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="-6">8A</text>
+</svg>

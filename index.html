@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Kelas 8A</title>
+  
+  <!-- iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kelas 8A">
+  <meta name="application-name" content="Kelas 8A">
+  <meta name="theme-color" content="#F2F2F7" id="theme-color-meta">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  
+  <!-- iOS Cupertino Theme Stylesheet -->
+  <link rel="stylesheet" href="css/ios-theme.css">
+</head>
+<body>
+
+  <!-- Top iOS Navigation Bar -->
+  <header class="ios-navbar">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div id="nav-icon-container" class="text-blue"></div>
+      <div>
+        <div class="ios-nav-title" id="ios-nav-title">Kelas 8A</div>
+        <div class="ios-nav-subtext" id="ios-nav-subtext">SMP Negeri Unggulan</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button class="ios-nav-btn" id="btn-theme-toggle" aria-label="Ganti Tema">
+        <span id="theme-icon-container"></span>
+      </button>
+      <button class="ios-nav-btn" id="btn-quick-add" aria-label="Tambah">
+        <span id="add-icon-container"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="ios-container">
+
+    <!-- TAB 1: BERANDA -->
+    <div id="tab-beranda" class="tab-view">
+      <div class="ios-large-title-block">
+        <div class="ios-super-title" id="home-date-str">Minggu, 27 September 2026</div>
+        <div class="ios-large-title">Ringkasan Kelas 8A</div>
+      </div>
+
+      <!-- Quick Metrics Cards -->
+      <div class="ios-grid-2">
+        <div class="ios-stat-card" onclick="switchTab('kas')">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span class="ios-stat-label">Saldo Kas</span>
+            <div class="ios-icon-well blue" style="width: 26px; height: 26px; margin: 0;">
+              <span id="stat-wallet-icon"></span>
+            </div>
+          </div>
+          <div class="ios-stat-value text-blue" id="dash-saldo">Rp 0</div>
+          <div class="ios-stat-label mt-1">Ketuk untuk detail kas</div>
+        </div>
+
+        <div class="ios-stat-card" onclick="switchTab('info')">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span class="ios-stat-label">Kehadiran Hari Ini</span>
+            <div class="ios-icon-well green" style="width: 26px; height: 26px; margin: 0;">
+              <span id="stat-users-icon"></span>
+            </div>
+          </div>
+          <div class="ios-stat-value text-green" id="dash-kehadiran">0 / 32</div>
+          <div class="ios-stat-label mt-1" id="dash-kehadiran-sub">Sakit: 0 • Izin: 0</div>
+        </div>
+      </div>
+
+      <!-- Jadwal Hari Ini Widget -->
+      <div class="ios-section">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span class="ios-section-header" style="margin-left: 0; margin-bottom: 0;">Jadwal Pelajaran Hari Ini</span>
+          <button class="ios-nav-btn" style="font-size: 13px; padding: 2px 6px;" onclick="switchTab('jadwal')">Lihat Semua</button>
+        </div>
+        <div class="ios-card" id="dash-jadwal-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Piket Hari Ini Widget -->
+      <div class="ios-section">
+        <div class="ios-section-header">Petugas Piket Hari Ini</div>
+        <div class="ios-card" style="padding: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center;">
+              <div class="ios-icon-well purple" style="width: 28px; height: 28px; margin-right: 8px;">
+                <span id="dash-piket-icon"></span>
+              </div>
+              <span class="font-semibold" id="dash-piket-hari">Senin</span>
+            </div>
+            <button class="ios-badge" id="btn-toggle-dash-piket" style="cursor: pointer; border: none; font-family: inherit;">
+              <span id="dash-piket-check-icon"></span>
+              <span id="dash-piket-status-text">Belum Piket</span>
+            </button>
+          </div>
+          <div id="dash-piket-anggota" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tugas Mendatang Widget -->
+      <div class="ios-section">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span class="ios-section-header" style="margin-left: 0; margin-bottom: 0;">Tugas & PR Terdekat</span>
+          <button class="ios-nav-btn" style="font-size: 13px; padding: 2px 6px;" onclick="switchTab('tugas')">Kelola</button>
+        </div>
+        <div class="ios-card" id="dash-tugas-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Pengumuman Kelas -->
+      <div class="ios-section">
+        <div class="ios-section-header">Pengumuman & Info Penting</div>
+        <div id="dash-pengumuman-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: JADWAL -->
+    <div id="tab-jadwal" class="tab-view hidden">
+      <div class="ios-large-title-block">
+        <div class="ios-super-title">Waktu & Pembelajaran</div>
+        <div class="ios-large-title">Jadwal Kelas 8A</div>
+      </div>
+
+      <!-- Day Segmented Control -->
+      <div class="ios-segmented-control" id="jadwal-day-selector">
+        <button class="ios-segment-btn active" data-day="senin">Sen</button>
+        <button class="ios-segment-btn" data-day="selasa">Sel</button>
+        <button class="ios-segment-btn" data-day="rabu">Rab</button>
+        <button class="ios-segment-btn" data-day="kamis">Kam</button>
+        <button class="ios-segment-btn" data-day="jumat">Jum</button>
+        <button class="ios-segment-btn" data-day="sabtu">Sab</button>
+      </div>
+
+      <!-- Timetable Card List -->
+      <div class="ios-section">
+        <div class="ios-section-header" id="jadwal-list-title">Mata Pelajaran Hari Senin</div>
+        <div class="ios-card" id="jadwal-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Piket for this day -->
+      <div class="ios-section" id="jadwal-piket-box">
+        <div class="ios-section-header">Regu Piket Kebersihan</div>
+        <div class="ios-card" style="padding: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <span class="font-semibold" id="jadwal-piket-title">Petugas Piket</span>
+            <span id="jadwal-piket-badge" class="ios-badge gray">Status</span>
+          </div>
+          <div id="jadwal-piket-list" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: TUGAS -->
+    <div id="tab-tugas" class="tab-view hidden">
+      <div class="ios-large-title-block" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div class="ios-super-title">Agenda Akademik</div>
+          <div class="ios-large-title">Tugas & PR</div>
+        </div>
+        <button class="ios-badge blue" style="padding: 8px 12px; cursor: pointer; border: none; font-family: inherit;" onclick="openModalTugas()">
+          <span id="icon-tugas-add-btn"></span>
+          <span>Tugas Baru</span>
+        </button>
+      </div>
+
+      <!-- Filter Segmented Control -->
+      <div class="ios-segmented-control" id="tugas-filter-selector">
+        <button class="ios-segment-btn active" data-filter="semua">Semua</button>
+        <button class="ios-segment-btn" data-filter="belum">Belum Selesai</button>
+        <button class="ios-segment-btn" data-filter="selesai">Selesai</button>
+      </div>
+
+      <div class="ios-section">
+        <div class="ios-card" id="tugas-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: KAS KELAS -->
+    <div id="tab-kas" class="tab-view hidden">
+      <div class="ios-large-title-block">
+        <div class="ios-super-title">Transparansi Keuangan</div>
+        <div class="ios-large-title">Buku Kas 8A</div>
+      </div>
+
+      <!-- Financial Balance Master Card -->
+      <div class="ios-card" style="padding: 18px; margin-bottom: 16px; background: linear-gradient(135deg, rgba(0, 122, 255, 0.08), rgba(52, 199, 89, 0.08));">
+        <span class="ios-stat-label">Saldo Kas Saat Ini</span>
+        <div class="ios-stat-value text-blue" style="font-size: 28px; margin: 4px 0 16px;" id="kas-total-saldo">Rp 0</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 0.5px solid var(--ios-border);">
+          <div>
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ios-green); font-weight: 600;">
+              <span id="kas-inc-icon"></span>
+              <span>Total Pemasukan</span>
+            </div>
+            <div class="font-bold text-green mt-1" style="font-size: 15px;" id="kas-total-masuk">Rp 0</div>
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ios-red); font-weight: 600;">
+              <span id="kas-exp-icon"></span>
+              <span>Total Pengeluaran</span>
+            </div>
+            <div class="font-bold text-red mt-1" style="font-size: 15px;" id="kas-total-keluar">Rp 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        <button class="ios-button tinted" style="font-size: 14px; padding: 10px 14px;" onclick="openModalKas('masuk')">
+          <span id="kas-btn-inc-icon"></span>
+          <span>+ Kas Masuk</span>
+        </button>
+        <button class="ios-button destructive" style="font-size: 14px; padding: 10px 14px;" onclick="openModalKas('keluar')">
+          <span id="kas-btn-exp-icon"></span>
+          <span>- Pengeluaran</span>
+        </button>
+      </div>
+
+      <!-- Filter Segmented Control -->
+      <div class="ios-segmented-control" id="kas-filter-selector">
+        <button class="ios-segment-btn active" data-filter="semua">Semua</button>
+        <button class="ios-segment-btn" data-filter="masuk">Pemasukan</button>
+        <button class="ios-segment-btn" data-filter="keluar">Pengeluaran</button>
+      </div>
+
+      <!-- Transactions List -->
+      <div class="ios-section">
+        <div class="ios-section-header">Riwayat Transaksi</div>
+        <div class="ios-card" id="kas-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: KELAS & INFO -->
+    <div id="tab-info" class="tab-view hidden">
+      <div class="ios-large-title-block">
+        <div class="ios-super-title">Informasi & Administrasi</div>
+        <div class="ios-large-title">Data Kelas 8A</div>
+      </div>
+
+      <!-- Sub-view Segmented Switcher -->
+      <div class="ios-segmented-control" id="info-sub-selector">
+        <button class="ios-segment-btn active" data-sub="absen">Absensi (32)</button>
+        <button class="ios-segment-btn" data-sub="struktur">Struktur</button>
+        <button class="ios-segment-btn" data-sub="pengaturan">Pengaturan</button>
+      </div>
+
+      <!-- SUB-VIEW 1: ABSENSI & SISWA -->
+      <div id="subview-absen">
+        <!-- Attendance Counters Banner -->
+        <div class="ios-card" style="padding: 12px; margin-bottom: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center;">
+          <div>
+            <span class="ios-badge green" style="font-size: 11px;">Hadir</span>
+            <div class="font-bold text-green mt-1" style="font-size: 16px;" id="count-hadir">0</div>
+          </div>
+          <div>
+            <span class="ios-badge red" style="font-size: 11px;">Sakit</span>
+            <div class="font-bold text-red mt-1" style="font-size: 16px;" id="count-sakit">0</div>
+          </div>
+          <div>
+            <span class="ios-badge orange" style="font-size: 11px;">Izin</span>
+            <div class="font-bold text-orange mt-1" style="font-size: 16px;" id="count-izin">0</div>
+          </div>
+          <div>
+            <span class="ios-badge gray" style="font-size: 11px;">Alpa</span>
+            <div class="font-bold text-sub mt-1" style="font-size: 16px;" id="count-alpa">0</div>
+          </div>
+        </div>
+
+        <!-- Student Search Bar -->
+        <div style="position: relative; margin-bottom: 12px;">
+          <div style="position: absolute; left: 12px; top: 11px; color: var(--ios-subtext);" id="search-icon-box"></div>
+          <input type="text" id="siswa-search-input" class="ios-input" style="padding-left: 36px;" placeholder="Cari nama atau nomor absen...">
+        </div>
+
+        <div class="ios-card" id="siswa-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 2: STRUKTUR ORGANISASI -->
+      <div id="subview-struktur" class="hidden">
+        <div class="ios-section">
+          <div class="ios-section-header">Dewan Pengurus Kelas 8A</div>
+          <div class="ios-card" id="struktur-list-container">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 3: PENGATURAN & BACKUP -->
+      <div id="subview-pengaturan" class="hidden">
+        <div class="ios-section">
+          <div class="ios-section-header">Tampilan & Tema</div>
+          <div class="ios-card">
+            <div class="ios-switch-container">
+              <div>
+                <div class="font-semibold">Mode Gelap (Dark Mode)</div>
+                <div class="ios-nav-subtext">Mengikuti nuansa iOS Night Mode</div>
+              </div>
+              <label class="ios-switch">
+                <input type="checkbox" id="switch-dark-mode">
+                <span class="ios-switch-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-section">
+          <div class="ios-section-header">Cadangan & Pemulihan Data (Backup)</div>
+          <div class="ios-card">
+            <div class="ios-list-item" onclick="handleExportData()" style="cursor: pointer;">
+              <div style="display: flex; align-items: center;">
+                <div class="ios-icon-well blue">
+                  <span id="set-export-icon"></span>
+                </div>
+                <div>
+                  <div class="font-semibold">Ekspor Data Kelas (JSON)</div>
+                  <div class="ios-nav-subtext">Unduh seluruh catatan jadwal, kas, & siswa</div>
+                </div>
+              </div>
+              <span id="set-chevron-1" class="text-sub"></span>
+            </div>
+
+            <div class="ios-list-item" onclick="triggerImportData()" style="cursor: pointer;">
+              <div style="display: flex; align-items: center;">
+                <div class="ios-icon-well green">
+                  <span id="set-import-icon"></span>
+                </div>
+                <div>
+                  <div class="font-semibold">Impor Cadangan Data</div>
+                  <div class="ios-nav-subtext">Pulihkan data dari file JSON</div>
+                </div>
+              </div>
+              <span id="set-chevron-2" class="text-sub"></span>
+            </div>
+            <input type="file" id="file-import-input" accept=".json" class="hidden">
+
+            <div class="ios-list-item" onclick="handleResetData()" style="cursor: pointer;">
+              <div style="display: flex; align-items: center;">
+                <div class="ios-icon-well red">
+                  <span id="set-reset-icon"></span>
+                </div>
+                <div>
+                  <div class="font-semibold text-red">Reset ke Data Asli</div>
+                  <div class="ios-nav-subtext">Kembalikan ke data bawaan Kelas 8A</div>
+                </div>
+              </div>
+              <span id="set-chevron-3" class="text-sub"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-section">
+          <div class="ios-section-header">Tentang Aplikasi</div>
+          <div class="ios-card" style="padding: 16px; text-align: center;">
+            <div class="font-bold" style="font-size: 16px;">Kelas 8A - iOS Edition</div>
+            <div class="ios-nav-subtext mt-1">Versi 1.0.0 (Build 2026.09)</div>
+            <div class="ios-nav-subtext mt-1">Dirancang khusus untuk efisiensi & administrasi mandiri Kelas 8A</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- iOS Bottom Tab Bar -->
+  <nav class="ios-tabbar">
+    <button class="ios-tab-item active" data-tab="beranda">
+      <div class="ios-tab-icon" id="tab-icon-beranda"></div>
+      <span>Beranda</span>
+    </button>
+    <button class="ios-tab-item" data-tab="jadwal">
+      <div class="ios-tab-icon" id="tab-icon-jadwal"></div>
+      <span>Jadwal</span>
+    </button>
+    <button class="ios-tab-item" data-tab="tugas">
+      <div class="ios-tab-icon" id="tab-icon-tugas"></div>
+      <span>Tugas</span>
+    </button>
+    <button class="ios-tab-item" data-tab="kas">
+      <div class="ios-tab-icon" id="tab-icon-kas"></div>
+      <span>Kas</span>
+    </button>
+    <button class="ios-tab-item" data-tab="info">
+      <div class="ios-tab-icon" id="tab-icon-info"></div>
+      <span>Kelas</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: Tambah Tugas Baru -->
+  <div class="ios-modal-overlay" id="modal-tugas">
+    <div class="ios-modal-sheet">
+      <div class="ios-modal-grabber"></div>
+      <div class="ios-modal-header">
+        <div class="ios-modal-title">Catat Tugas Baru</div>
+        <button class="ios-close-btn" onclick="closeModalTugas()">
+          <span id="close-modal-tugas-icon"></span>
+        </button>
+      </div>
+      <form id="form-tambah-tugas">
+        <div class="ios-form-group">
+          <label class="ios-label">Mata Pelajaran</label>
+          <select id="tugas-input-mapel" class="ios-select" required>
+            <option value="Matematika">Matematika</option>
+            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="Bahasa Inggris">Bahasa Inggris</option>
+            <option value="IPA Terpadu">IPA Terpadu</option>
+            <option value="IPS Terpadu">IPS Terpadu</option>
+            <option value="Pendidikan Agama Islam">Pendidikan Agama Islam</option>
+            <option value="PPKn">PPKn</option>
+            <option value="Informatika">Informatika</option>
+            <option value="PJOK">PJOK (Olahraga)</option>
+            <option value="Prakarya">Prakarya</option>
+            <option value="Seni Budaya">Seni Budaya</option>
+            <option value="Bahasa Daerah">Bahasa Daerah</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Judul / Instruksi Tugas</label>
+          <input type="text" id="tugas-input-judul" class="ios-input" placeholder="Misal: Latihan Soal Bab 2 Hal 45" required>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Keterangan Tambahan</label>
+          <textarea id="tugas-input-deskripsi" class="ios-textarea" rows="2" placeholder="Catatan format buku, kelompok, atau instruksi guru..."></textarea>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Tenggat Waktu (Deadline)</label>
+          <input type="date" id="tugas-input-deadline" class="ios-input" required>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Tingkat Prioritas</label>
+          <select id="tugas-input-prioritas" class="ios-select">
+            <option value="Tinggi">Tinggi (Mendesak)</option>
+            <option value="Sedang" selected>Sedang (Biasa)</option>
+            <option value="Rendah">Rendah (Santai)</option>
+          </select>
+        </div>
+        <button type="submit" class="ios-button mt-3">Simpan Tugas</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Tambah Transaksi Kas -->
+  <div class="ios-modal-overlay" id="modal-kas">
+    <div class="ios-modal-sheet">
+      <div class="ios-modal-grabber"></div>
+      <div class="ios-modal-header">
+        <div class="ios-modal-title" id="modal-kas-title">Catat Transaksi Kas</div>
+        <button class="ios-close-btn" onclick="closeModalKas()">
+          <span id="close-modal-kas-icon"></span>
+        </button>
+      </div>
+      <form id="form-tambah-kas">
+        <input type="hidden" id="kas-input-tipe" value="masuk">
+        <div class="ios-form-group">
+          <label class="ios-label">Kategori Transaksi</label>
+          <select id="kas-input-kategori" class="ios-select" required>
+            <!-- Dynamically populated based on tipe -->
+          </select>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Nominal (Rupiah)</label>
+          <input type="number" id="kas-input-nominal" class="ios-input" placeholder="Misal: 50000" min="1000" step="500" required>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Keterangan Lengkap</label>
+          <input type="text" id="kas-input-keterangan" class="ios-input" placeholder="Misal: Iuran Kas Minggu ke-5 / Beli spidol" required>
+        </div>
+        <div class="ios-form-group">
+          <label class="ios-label">Tanggal Transaksi</label>
+          <input type="date" id="kas-input-tanggal" class="ios-input" required>
+        </div>
+        <button type="submit" class="ios-button mt-3" id="kas-submit-btn">Simpan Transaksi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/icons.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+          console.log('SW registration skipped:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
