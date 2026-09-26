@@ -48,9 +48,20 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file('release.jks')
+            storePassword 'kelas8a2026'
+            keyAlias 'kelas8a'
+            keyPassword 'kelas8a2026'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }

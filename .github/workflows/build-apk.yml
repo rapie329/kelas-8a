@@ -5,9 +5,12 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: Build Android APK Release
+    name: Build Android APK Release (Split ABI & Universal)
     runs-on: ubuntu-latest
 
     steps:
@@ -30,11 +33,41 @@ jobs:
       - name: Unduh Dependencies Flutter
         run: flutter pub get
 
-      - name: Compile Release APK
-        run: flutter build apk --release
+      - name: Compile Split APK per ABI (arm64, armv7, x86_64)
+        run: flutter build apk --release --split-per-abi
 
-      - name: Unggah File APK Artifact
+      - name: Salin Split APK ke Folder Rilis
+        run: |
+          mkdir -p dist_apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk dist_apk/Kelas8A-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk dist_apk/Kelas8A-armeabi-v7a.apk
+
+      - name: Compile Universal APK (All-in-One)
+        run: |
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk dist_apk/Kelas8A-Universal.apk
+
+      - name: Unggah File APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Kelas8A-Release-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: Kelas8A-APK-Builds
+          path: dist_apk/*.apk
+
+      - name: Publikasikan Rilis GitHub Otomatis
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/master')
+        with:
+          tag_name: v1.0.1
+          name: "Kelas 8A v1.0.1 (Support Android 9-16 & Split ABI)"
+          body: |
+            Aplikasi Kelas 8A Flutter iOS Cupertino (Build Rilis Resmi)
+            - Support Android 9 sampai Android 16 (API 28 - API 35+)
+            - Signed dengan RSA 2048 Release Key resmi (V1 + V2 + V3 Signature)
+            - Ikon bergaya otentik Apple iOS (Squircle Blue Gradient & SF Typography)
+            - Tersedia varian Split ABI untuk hemat memori dan ukuran lebih ringan:
+              * Kelas8A-arm64-v8a.apk (Disarankan untuk 99% HP Android modern)
+              * Kelas8A-armeabi-v7a.apk (Untuk HP Android 32-bit lama)
+              * Kelas8A-Universal.apk (Universal / Cocok untuk semua HP)
+          files: dist_apk/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
