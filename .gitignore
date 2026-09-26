@@ -1,0 +1,25 @@
+# Flutter / Dart gitignore
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/local.properties
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+*.mode1v3
+*.mode2v3
+*.nocache
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.atom/
+.buildlog/
+.history
+.idea/
+.vscode/

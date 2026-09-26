@@ -1,13 +1,13 @@
-name: Build Android APK
+name: Build Flutter Android APK
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Android APK di Cloud
+    name: Build Android APK Release
     runs-on: ubuntu-latest
 
     steps:
@@ -20,26 +20,21 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
         with:
-          node-version: '20'
+          flutter-version: '3.24.3'
+          channel: 'stable'
+          cache: true
 
-      - name: Siapkan Capacitor & Project Android
-        run: |
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Kelas 8A" "com.sekolah.kelas8a" --web-dir "."
-          npx cap add android
+      - name: Unduh Dependencies Flutter
+        run: flutter pub get
 
-      - name: Compile APK Menggunakan Gradle
-        run: |
-          cd android
-          chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
+      - name: Compile Release APK
+        run: flutter build apk --release
 
-      - name: Unggah Hasil File APK
+      - name: Unggah File APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Kelas-8A-Android-App
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: Kelas8A-Release-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
